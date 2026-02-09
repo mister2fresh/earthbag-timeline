@@ -4,14 +4,10 @@ import CountingNumber from './CountingNumber'
 
 export default function AnimatedStat({ end, duration, delay, label }) {
   const [isVisible, setIsVisible] = useState(false)
-  const [showParticles, setShowParticles] = useState(false)
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(true)
-      // Trigger particle burst when stat appears
-      setTimeout(() => setShowParticles(true), 100)
-      setTimeout(() => setShowParticles(false), 800)
     }, delay)
 
     return () => clearTimeout(timer)
@@ -46,31 +42,12 @@ export default function AnimatedStat({ end, duration, delay, label }) {
 
         {/* Label with clean sans */}
         <div 
-          className="text-xs md:text-sm text-[#D4A59A]/70 uppercase tracking-[0.2em] font-medium"
+          className="text-xs md:text-sm text-stone-400 uppercase tracking-[0.2em] font-medium"
           style={{ fontFamily: "'DM Sans', sans-serif" }}
         >
           {label}
         </div>
       </div>
-
-      {/* Dust particle effect on appear */}
-      {showParticles && (
-        <div className="absolute inset-0 pointer-events-none">
-          {[...Array(5)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-1 h-1 bg-[#E89C31] rounded-full animate-[particleBurst_0.8s_ease-out_forwards]"
-              style={{
-                left: '50%',
-                top: '50%',
-                transform: `translate(-50%, -50%) rotate(${i * 72}deg)`,
-                '--particle-distance': '40px',
-                animationDelay: `${i * 0.05}s`
-              }}
-            />
-          ))}
-        </div>
-      )}
     </div>
   )
 }
