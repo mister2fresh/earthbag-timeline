@@ -217,11 +217,14 @@ export async function getStaticProps({ params }) {
         path: `/images/${params.slug}/${file}`,
         filename: file
       }))
-      // Sort so cover.jpg comes first, then photo-1, photo-2, etc.
+      // Sort so cover.jpg comes first, then numerically by filename
       .sort((a, b) => {
         if (a.filename === 'cover.jpg') return -1
         if (b.filename === 'cover.jpg') return 1
-        return a.filename.localeCompare(b.filename)
+        // Natural sort: extract numbers and compare numerically
+        const numA = parseInt(a.filename.match(/\d+/)?.[0] || '0', 10)
+        const numB = parseInt(b.filename.match(/\d+/)?.[0] || '0', 10)
+        return numA - numB
       })
   } catch (error) {
     console.error(`No photos found for phase: ${params.slug}`)
