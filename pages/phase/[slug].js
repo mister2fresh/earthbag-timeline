@@ -135,7 +135,7 @@ function PhotoCard({ photo, index, onClick }) {
 
   return (
     <div 
-      className="group relative aspect-square bg-stone-800 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer"
+      className="group relative aspect-[4/3] bg-stone-800 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer"
       onClick={onClick}
     >
       <Image
