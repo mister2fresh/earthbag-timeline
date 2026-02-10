@@ -25,27 +25,27 @@ export default function PhaseConstellation({ phases }) {
   const positions = {
     10: { 
       desktop: { top: '10%', left: '15%' },
-      mobile: { top: '8%', left: '50%' }
+      mobile: { top: '6%', left: '50%' }
     },
     20: { 
       desktop: { top: '25%', left: '70%' },
-      mobile: { top: '23%', left: '50%' }
+      mobile: { top: '21%', left: '50%' }
     },
     30: { 
       desktop: { top: '40%', left: '25%' },
-      mobile: { top: '38%', left: '50%' }
+      mobile: { top: '36%', left: '50%' }
     },
     40: { 
       desktop: { top: '55%', left: '75%' },
-      mobile: { top: '53%', left: '50%' }
+      mobile: { top: '51%', left: '50%' }
     },
     50: { 
       desktop: { top: '70%', left: '20%' },
-      mobile: { top: '68%', left: '50%' }
+      mobile: { top: '66%', left: '50%' }
     },
     60: { 
       desktop: { top: '85%', left: '65%' },
-      mobile: { top: '83%', left: '50%' }
+      mobile: { top: '81%', left: '50%' }
     },
   }
 
@@ -59,11 +59,11 @@ export default function PhaseConstellation({ phases }) {
   ]
 
   const mobileConnections = [
-    { from: { x: '50%', y: '8%' }, to: { x: '50%', y: '23%' } },
-    { from: { x: '50%', y: '23%' }, to: { x: '50%', y: '38%' } },
-    { from: { x: '50%', y: '38%' }, to: { x: '50%', y: '53%' } },
-    { from: { x: '50%', y: '53%' }, to: { x: '50%', y: '68%' } },
-    { from: { x: '50%', y: '68%' }, to: { x: '50%', y: '83%' } },
+    { from: { x: '50%', y: '6%' }, to: { x: '50%', y: '21%' } },
+    { from: { x: '50%', y: '21%' }, to: { x: '50%', y: '36%' } },
+    { from: { x: '50%', y: '36%' }, to: { x: '50%', y: '51%' } },
+    { from: { x: '50%', y: '51%' }, to: { x: '50%', y: '66%' } },
+    { from: { x: '50%', y: '66%' }, to: { x: '50%', y: '81%' } },
   ]
 
   return (
@@ -79,7 +79,7 @@ export default function PhaseConstellation({ phases }) {
       </div>
 
       {/* Constellation Container */}
-      <div className="relative w-full h-[900px] md:h-[800px] px-8 max-w-7xl mx-auto">
+      <div className="relative w-full h-[1100px] md:h-[900px] px-8 max-w-7xl mx-auto">
         
         {/* Desktop Connection Lines */}
         <svg 
@@ -166,8 +166,8 @@ export default function PhaseConstellation({ phases }) {
                 onMouseLeave={() => setHoveredPhase(null)}
               >
 
-                {/* Node Circle with Image */}
-                <div className={`relative w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 transition-all duration-300 shadow-2xl ${
+                {/* Node Circle with Image - INCREASED SIZE */}
+                <div className={`relative w-40 h-40 md:w-52 md:h-52 rounded-full overflow-hidden border-4 transition-all duration-300 shadow-2xl ${
                   hoveredPhase === phase.slug 
                     ? 'border-amber-400 ring-4 ring-amber-500/50 scale-110' 
                     : 'border-amber-600'
@@ -176,16 +176,19 @@ export default function PhaseConstellation({ phases }) {
                     src={phase.coverImage}
                     alt={phase.title}
                     fill
-                    sizes="(max-width: 768px) 128px, 160px"
+                    sizes="(max-width: 768px) 160px, 208px"
                     className={`object-cover transition-all duration-300 ${
                       hoveredPhase === phase.slug ? 'scale-110 brightness-110' : 'scale-100'
                     }`}
                   />
                   
-                  {/* Overlay with phase number */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-end justify-center pb-4">
-                    <span className="text-white font-bold text-lg md:text-xl">
-                      {phase.order / 10}
+                  {/* Overlay with Title and Date */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent flex flex-col items-center justify-end pb-4 px-2">
+                    <span className="text-white font-bold text-sm md:text-base text-center leading-tight">
+                      {phase.title}
+                    </span>
+                    <span className="text-amber-400 text-xs md:text-sm mt-1">
+                      {phase.date}
                     </span>
                   </div>
                   
@@ -204,12 +207,6 @@ export default function PhaseConstellation({ phases }) {
                     : 'opacity-0 translate-y-2 pointer-events-none'
                 }`}>
                   <div className="bg-stone-800 border border-amber-500/50 rounded-lg p-4 shadow-2xl min-w-[200px] max-w-[280px]">
-                    <h3 className="text-white font-bold text-lg mb-1">
-                      {phase.title}
-                    </h3>
-                    <p className="text-amber-500 text-sm mb-2">
-                      {phase.date}
-                    </p>
                     <p className="text-stone-400 text-xs leading-relaxed line-clamp-3">
                       {phase.excerpt}
                     </p>
@@ -237,4 +234,5 @@ export default function PhaseConstellation({ phases }) {
         <p>Hover over each phase to learn more • Click to explore in detail</p>
       </div>
     </section>
-  )}
+  )
+}

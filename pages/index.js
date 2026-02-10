@@ -11,12 +11,12 @@ export default function Home({ phases }) {
         
         {/* Title */}
         <h1 className="text-6xl md:text-8xl font-bold text-stone-100 text-center mb-8">
-          From Earth to Home
+          From Dream to Reality
         </h1>
         
         {/* Subtitle */}
         <p className="text-xl md:text-2xl text-stone-400 text-center mb-20 max-w-2xl">
-          Building an earthship from the ground up
+          Building an earthbag home from the ground up
         </p>
 
         {/* Animated Stats Grid */}
@@ -28,10 +28,10 @@ export default function Home({ phases }) {
             label="Bags of Earth"
           />
           <AnimatedStat 
-            end={1} 
+            end={5000} 
             duration={1500}
             delay={3400}
-            label="Mile of Barb Wire"
+            label="Feet of Barb Wire"
           />
           <AnimatedStat 
             end={1500} 
