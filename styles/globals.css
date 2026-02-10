@@ -1,7 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap');
+
 @import "tailwindcss";
 
-@tailwind base;
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
 
-@tailwind components;
-
-@tailwind utilities;
+/* Custom selection color */
+::selection {
+  background-color: rgba(212, 165, 116, 0.3);
+  color: #f5ebe0;
+}

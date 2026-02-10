@@ -67,19 +67,72 @@ export default function PhaseConstellation({ phases }) {
   ]
 
   return (
-    <section className="min-h-screen relative bg-stone-950 py-20">
+    <section className="min-h-screen relative py-20 overflow-hidden">
+      
+      {/* Background - matching hero */}
+      <div className="absolute inset-0 bg-[#1a1612]" />
+      
+      {/* Warm gradient overlay */}
+      <div 
+        className="absolute inset-0"
+        style={{
+          background: 'radial-gradient(ellipse 100% 50% at 50% 30%, rgba(180, 100, 50, 0.1) 0%, transparent 60%)'
+        }}
+      />
+      
+      {/* Subtle noise texture */}
+      <div 
+        className="absolute inset-0 opacity-40 pointer-events-none"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+          mixBlendMode: 'overlay'
+        }}
+      />
+      
+      {/* Organic curved lines - continuing from hero */}
+      <svg 
+        className="absolute inset-0 w-full h-full opacity-[0.07] pointer-events-none"
+        viewBox="0 0 1000 1000"
+        preserveAspectRatio="xMidYMid slice"
+      >
+        <path d="M0,100 Q250,50 500,80 T1000,40" fill="none" stroke="#c4956a" strokeWidth="0.8" />
+        <path d="M0,200 Q300,150 600,180 T1000,140" fill="none" stroke="#c4956a" strokeWidth="0.6" />
+        <path d="M0,800 Q200,750 450,780 T1000,740" fill="none" stroke="#c4956a" strokeWidth="0.6" />
+        <path d="M0,900 Q350,850 650,880 T1000,840" fill="none" stroke="#c4956a" strokeWidth="0.5" />
+      </svg>
+
       {/* Section Title */}
-      <div className="text-center mb-16 px-8">
-        <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+      <div className="relative z-10 text-center mb-16 px-8">
+        <p 
+          className="text-sm tracking-[0.4em] uppercase mb-4"
+          style={{ 
+            color: '#8a7560',
+            fontFamily: "'Cormorant Garamond', Georgia, serif"
+          }}
+        >
+          Follow the Path
+        </p>
+        <h2 
+          className="text-4xl md:text-5xl lg:text-6xl font-light mb-4"
+          style={{ 
+            fontFamily: "'Cormorant Garamond', Georgia, serif",
+            color: '#f5ebe0'
+          }}
+        >
           The Journey
         </h2>
-        <p className="text-stone-400 text-lg">
-          Explore each phase of the build
-        </p>
+        <div className="flex items-center justify-center gap-4 mt-6">
+          <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#c4956a]" />
+          <div 
+            className="w-2 h-2 rounded-full"
+            style={{ backgroundColor: '#c4956a' }}
+          />
+          <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#c4956a]" />
+        </div>
       </div>
 
       {/* Constellation Container */}
-      <div className="relative w-full h-[1100px] md:h-[900px] px-8 max-w-7xl mx-auto">
+      <div className="relative z-10 w-full h-[1100px] md:h-[900px] px-8 max-w-7xl mx-auto">
         
         {/* Desktop Connection Lines */}
         <svg 
@@ -95,7 +148,7 @@ export default function PhaseConstellation({ phases }) {
               refY="3" 
               orient="auto"
             >
-              <polygon points="0 0, 10 3, 0 6" fill="rgba(245, 158, 11, 0.5)" />
+              <polygon points="0 0, 10 3, 0 6" fill="rgba(196, 149, 106, 0.6)" />
             </marker>
           </defs>
           {connections.map((conn, index) => (
@@ -105,9 +158,9 @@ export default function PhaseConstellation({ phases }) {
               y1={conn.from.y}
               x2={conn.to.x}
               y2={conn.to.y}
-              stroke="rgba(245, 158, 11, 0.4)"
-              strokeWidth="2"
-              strokeDasharray="5,5"
+              stroke="rgba(196, 149, 106, 0.3)"
+              strokeWidth="1.5"
+              strokeDasharray="8,6"
               markerEnd="url(#arrowhead)"
             />
           ))}
@@ -127,7 +180,7 @@ export default function PhaseConstellation({ phases }) {
               refY="3" 
               orient="auto"
             >
-              <polygon points="0 0, 10 3, 0 6" fill="rgba(245, 158, 11, 0.5)" />
+              <polygon points="0 0, 10 3, 0 6" fill="rgba(196, 149, 106, 0.6)" />
             </marker>
           </defs>
           {mobileConnections.map((conn, index) => (
@@ -137,9 +190,9 @@ export default function PhaseConstellation({ phases }) {
               y1={conn.from.y}
               x2={conn.to.x}
               y2={conn.to.y}
-              stroke="rgba(245, 158, 11, 0.4)"
-              strokeWidth="2"
-              strokeDasharray="5,5"
+              stroke="rgba(196, 149, 106, 0.3)"
+              strokeWidth="1.5"
+              strokeDasharray="8,6"
               markerEnd="url(#arrowhead-mobile)"
             />
           ))}
@@ -149,6 +202,7 @@ export default function PhaseConstellation({ phases }) {
         {phases.map((phase) => {
           const position = positions[phase.order] || positions[10]
           const activePosition = isMobile ? position.mobile : position.desktop
+          const isHovered = hoveredPhase === phase.slug
           
           return (
             <Link 
@@ -160,57 +214,116 @@ export default function PhaseConstellation({ phases }) {
                 style={{ 
                   top: activePosition.top,
                   left: activePosition.left,
-                  zIndex: hoveredPhase === phase.slug ? 20 : 10
+                  zIndex: isHovered ? 20 : 10
                 }}
                 onMouseEnter={() => setHoveredPhase(phase.slug)}
                 onMouseLeave={() => setHoveredPhase(null)}
               >
 
-                {/* Node Circle with Image - INCREASED SIZE */}
-                <div className={`relative w-40 h-40 md:w-52 md:h-52 rounded-full overflow-hidden border-4 transition-all duration-300 shadow-2xl ${
-                  hoveredPhase === phase.slug 
-                    ? 'border-amber-400 ring-4 ring-amber-500/50 scale-110' 
-                    : 'border-amber-600'
-                }`}>
+                {/* Node Circle with Image */}
+                <div 
+                  className="relative w-40 h-40 md:w-52 md:h-52 rounded-full overflow-hidden transition-all duration-300"
+                  style={{
+                    border: isHovered ? '3px solid #d4a574' : '3px solid #8a7560',
+                    boxShadow: isHovered 
+                      ? '0 0 40px rgba(212, 165, 116, 0.3), 0 25px 50px -12px rgba(0, 0, 0, 0.5)' 
+                      : '0 25px 50px -12px rgba(0, 0, 0, 0.4)',
+                    transform: isHovered ? 'scale(1.08)' : 'scale(1)'
+                  }}
+                >
                   <Image
                     src={phase.coverImage}
                     alt={phase.title}
                     fill
                     sizes="(max-width: 768px) 160px, 208px"
-                    className={`object-cover transition-all duration-300 ${
-                      hoveredPhase === phase.slug ? 'scale-110 brightness-110' : 'scale-100'
-                    }`}
+                    className="object-cover transition-all duration-300"
+                    style={{
+                      transform: isHovered ? 'scale(1.1)' : 'scale(1)',
+                      filter: isHovered ? 'brightness(1.1)' : 'brightness(1)'
+                    }}
                   />
                   
                   {/* Overlay with Title and Date */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent flex flex-col items-center justify-end pb-4 px-2">
-                    <span className="text-white font-bold text-sm md:text-base text-center leading-tight">
+                  <div 
+                    className="absolute inset-0 flex flex-col items-center justify-end pb-4 px-3"
+                    style={{
+                      background: 'linear-gradient(to top, rgba(26, 22, 18, 0.95) 0%, rgba(26, 22, 18, 0.6) 50%, transparent 100%)'
+                    }}
+                  >
+                    <span 
+                      className="text-center leading-tight text-sm md:text-base"
+                      style={{ 
+                        fontFamily: "'Cormorant Garamond', Georgia, serif",
+                        color: '#f5ebe0',
+                        fontWeight: 500
+                      }}
+                    >
                       {phase.title}
                     </span>
-                    <span className="text-amber-400 text-xs md:text-sm mt-1">
+                    <span 
+                      className="text-xs md:text-sm mt-1"
+                      style={{ 
+                        fontFamily: "'Cormorant Garamond', Georgia, serif",
+                        color: '#c4956a'
+                      }}
+                    >
                       {phase.date}
                     </span>
                   </div>
                   
                   {/* Start Here indicator for first phase */}
                   {phase.order === 10 && (
-                    <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap animate-pulse">
-                      START HERE
+                    <div 
+                      className="absolute -top-8 left-1/2 transform -translate-x-1/2 text-xs font-medium px-3 py-1 rounded-full whitespace-nowrap animate-pulse"
+                      style={{
+                        backgroundColor: '#d4a574',
+                        color: '#1a1612',
+                        fontFamily: "'Cormorant Garamond', Georgia, serif",
+                        letterSpacing: '0.1em',
+                        textTransform: 'uppercase'
+                      }}
+                    >
+                      Start Here
                     </div>
                   )}
                 </div>
 
                 {/* Info Card - Shows on Hover */}
-                <div className={`absolute top-full mt-4 left-1/2 transform -translate-x-1/2 transition-all duration-300 ${
-                  hoveredPhase === phase.slug 
-                    ? 'opacity-100 translate-y-0' 
-                    : 'opacity-0 translate-y-2 pointer-events-none'
-                }`}>
-                  <div className="bg-stone-800 border border-amber-500/50 rounded-lg p-4 shadow-2xl min-w-[200px] max-w-[280px]">
-                    <p className="text-stone-400 text-xs leading-relaxed line-clamp-3">
+                <div 
+                  className="absolute top-full mt-4 left-1/2 transform -translate-x-1/2 transition-all duration-300"
+                  style={{
+                    opacity: isHovered ? 1 : 0,
+                    transform: isHovered 
+                      ? 'translateX(-50%) translateY(0)' 
+                      : 'translateX(-50%) translateY(8px)',
+                    pointerEvents: isHovered ? 'auto' : 'none'
+                  }}
+                >
+                  <div 
+                    className="rounded-lg p-4 min-w-[200px] max-w-[280px]"
+                    style={{
+                      backgroundColor: 'rgba(26, 22, 18, 0.95)',
+                      border: '1px solid rgba(196, 149, 106, 0.3)',
+                      boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+                    }}
+                  >
+                    <p 
+                      className="text-xs leading-relaxed line-clamp-3"
+                      style={{ 
+                        color: '#8a7560',
+                        fontFamily: "'Cormorant Garamond', Georgia, serif"
+                      }}
+                    >
                       {phase.excerpt}
                     </p>
-                    <div className="mt-3 flex items-center text-amber-500 text-sm font-medium">
+                    <div 
+                      className="mt-3 flex items-center text-sm"
+                      style={{ 
+                        color: '#d4a574',
+                        fontFamily: "'Cormorant Garamond', Georgia, serif",
+                        fontWeight: 500
+                      }}
+                    >
                       Explore Phase
                       <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -219,9 +332,15 @@ export default function PhaseConstellation({ phases }) {
                   </div>
                 </div>
 
-                {/* Pulse Animation on Node */}
-                {hoveredPhase === phase.slug && (
-                  <div className="absolute inset-0 rounded-full border-2 border-amber-500 animate-ping"></div>
+                {/* Subtle glow on hover */}
+                {isHovered && (
+                  <div 
+                    className="absolute inset-0 rounded-full animate-pulse pointer-events-none"
+                    style={{
+                      border: '2px solid rgba(212, 165, 116, 0.4)',
+                      boxShadow: '0 0 30px rgba(212, 165, 116, 0.2)'
+                    }}
+                  />
                 )}
               </div>
             </Link>
@@ -230,8 +349,16 @@ export default function PhaseConstellation({ phases }) {
       </div>
 
       {/* Legend */}
-      <div className="text-center mt-16 text-stone-500 text-sm">
-        <p>Hover over each phase to learn more • Click to explore in detail</p>
+      <div className="relative z-10 text-center mt-16 text-sm">
+        <p 
+          style={{ 
+            color: '#5a4a3a',
+            fontFamily: "'Cormorant Garamond', Georgia, serif",
+            letterSpacing: '0.05em'
+          }}
+        >
+          Hover over each phase to learn more • Click to explore in detail
+        </p>
       </div>
     </section>
   )
