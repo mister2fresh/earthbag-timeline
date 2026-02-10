@@ -123,7 +123,7 @@ export default function Home({ phases }) {
               label="Bags of Earth"
             />
             <AnimatedStat 
-              end={5000} 
+              end={5500} 
               duration={1500}
               delay={1200}
               label="Feet of Barb Wire"
