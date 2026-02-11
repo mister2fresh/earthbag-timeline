@@ -10,11 +10,27 @@ export default function CountingNumber({
   className = ''
 }) {
   const [count, setCount] = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
 
+  // Detect mobile on mount
   useEffect(() => {
-    // Wait for delay before starting
+    const checkMobile = () => {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+        || window.innerWidth < 768
+    }
+    
+    if (checkMobile()) {
+      setIsMobile(true)
+      setCount(end) // Show final number immediately on mobile
+    }
+  }, [end])
+
+  // Run animation only on desktop
+  useEffect(() => {
+    if (isMobile) return // Skip animation on mobile
+
     const delayTimer = setTimeout(() => {
-      const steps = 30 // Number of steps in the animation
+      const steps = 30
       const stepDuration = duration / steps
       let currentStep = 0
 
@@ -25,7 +41,6 @@ export default function CountingNumber({
           setCount(end)
           clearInterval(interval)
         } else {
-          // Ease-out effect: faster at start, slower at end
           const progress = currentStep / steps
           const easedProgress = 1 - Math.pow(1 - progress, 3)
           setCount(easedProgress * end)
@@ -36,7 +51,7 @@ export default function CountingNumber({
     }, delay)
 
     return () => clearTimeout(delayTimer)
-  }, [end, duration, delay])
+  }, [end, duration, delay, isMobile])
 
   // Format the number with commas
   const formatNumber = (num) => {
