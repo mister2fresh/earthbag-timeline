@@ -1,5 +1,5 @@
 // components/CountingNumber.js
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function CountingNumber({ 
   end, 
@@ -10,53 +10,35 @@ export default function CountingNumber({
   className = ''
 }) {
   const [count, setCount] = useState(0)
-  const [hasStarted, setHasStarted] = useState(false)
-  const animationRef = useRef(null)
-  const startTimeRef = useRef(null)
 
   useEffect(() => {
-    const startTimer = setTimeout(() => {
-      setHasStarted(true)
+    // Wait for delay before starting
+    const delayTimer = setTimeout(() => {
+      const steps = 30 // Number of steps in the animation
+      const stepDuration = duration / steps
+      let currentStep = 0
+
+      const interval = setInterval(() => {
+        currentStep++
+        
+        if (currentStep >= steps) {
+          setCount(end)
+          clearInterval(interval)
+        } else {
+          // Ease-out effect: faster at start, slower at end
+          const progress = currentStep / steps
+          const easedProgress = 1 - Math.pow(1 - progress, 3)
+          setCount(easedProgress * end)
+        }
+      }, stepDuration)
+
+      return () => clearInterval(interval)
     }, delay)
 
-    return () => clearTimeout(startTimer)
-  }, [delay])
+    return () => clearTimeout(delayTimer)
+  }, [end, duration, delay])
 
-  useEffect(() => {
-    if (!hasStarted) return
-
-    // Easing function (ease-out cubic)
-    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3)
-
-    const animate = (timestamp) => {
-      if (!startTimeRef.current) {
-        startTimeRef.current = timestamp
-      }
-
-      const elapsed = timestamp - startTimeRef.current
-      const progress = Math.min(elapsed / duration, 1)
-      const easedProgress = easeOutCubic(progress)
-      const currentValue = easedProgress * end
-
-      setCount(currentValue)
-
-      if (progress < 1) {
-        animationRef.current = requestAnimationFrame(animate)
-      } else {
-        setCount(end)
-      }
-    }
-
-    animationRef.current = requestAnimationFrame(animate)
-
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current)
-      }
-    }
-  }, [hasStarted, end, duration])
-
-  // Format the number with commas and decimals
+  // Format the number with commas
   const formatNumber = (num) => {
     return Math.round(num).toLocaleString('en-US', {
       minimumFractionDigits: decimals,
