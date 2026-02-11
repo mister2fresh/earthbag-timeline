@@ -296,10 +296,8 @@ export default function PhasePage({ phase, galleryPhotos, coverPhoto }) {
   )
 }
 
-// Individual photo card component
+// Individual photo card component - NO BLUR STATE, simpler and more reliable
 function PhotoCard({ photo, index, onClick }) {
-  const [isLoading, setIsLoading] = useState(true)
-
   return (
     <div 
       className="group relative aspect-[4/3] rounded-lg overflow-hidden cursor-pointer transition-all duration-300 hover:scale-[1.02]"
@@ -313,11 +311,8 @@ function PhotoCard({ photo, index, onClick }) {
         src={photo.path}
         alt={`Photo ${index + 1}`}
         fill
-        className={`object-cover transition-all duration-500 ${
-          isLoading ? 'blur-sm scale-105' : 'blur-0 scale-100 group-hover:scale-110'
-        }`}
+        className="object-cover transition-transform duration-500 group-hover:scale-110"
         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-        onLoadingComplete={() => setIsLoading(false)}
       />
       
       {/* Hover overlay */}

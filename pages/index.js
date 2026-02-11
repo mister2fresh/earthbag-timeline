@@ -120,7 +120,7 @@ export default function Home({ phases }) {
               end={2000} 
               duration={2000}
               delay={800}
-              label="Bags of Earth"
+              label="Bags of Lava Rock"
             />
             <AnimatedStat 
               end={5500} 

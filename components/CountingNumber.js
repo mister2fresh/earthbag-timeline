@@ -1,5 +1,5 @@
 // components/CountingNumber.js
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 export default function CountingNumber({ 
   end, 
@@ -11,9 +11,10 @@ export default function CountingNumber({
 }) {
   const [count, setCount] = useState(0)
   const [hasStarted, setHasStarted] = useState(false)
+  const animationRef = useRef(null)
+  const startTimeRef = useRef(null)
 
   useEffect(() => {
-    // Wait for delay before starting count
     const startTimer = setTimeout(() => {
       setHasStarted(true)
     }, delay)
@@ -24,38 +25,40 @@ export default function CountingNumber({
   useEffect(() => {
     if (!hasStarted) return
 
-    const startTime = Date.now()
-    const startValue = 0
-    const endValue = end
+    // Easing function (ease-out cubic)
+    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3)
 
-    // Easing function (ease-out cubic) - fast start, slow end
-    const easeOutCubic = (t) => {
-      return 1 - Math.pow(1 - t, 3)
-    }
+    const animate = (timestamp) => {
+      if (!startTimeRef.current) {
+        startTimeRef.current = timestamp
+      }
 
-    const animate = () => {
-      const currentTime = Date.now()
-      const elapsed = currentTime - startTime
+      const elapsed = timestamp - startTimeRef.current
       const progress = Math.min(elapsed / duration, 1)
-
       const easedProgress = easeOutCubic(progress)
-      const currentValue = startValue + (endValue - startValue) * easedProgress
+      const currentValue = easedProgress * end
 
       setCount(currentValue)
 
       if (progress < 1) {
-        requestAnimationFrame(animate)
+        animationRef.current = requestAnimationFrame(animate)
       } else {
-        setCount(endValue) // Ensure we end at exact value
+        setCount(end)
       }
     }
 
-    requestAnimationFrame(animate)
+    animationRef.current = requestAnimationFrame(animate)
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
+      }
+    }
   }, [hasStarted, end, duration])
 
   // Format the number with commas and decimals
   const formatNumber = (num) => {
-    return num.toLocaleString('en-US', {
+    return Math.round(num).toLocaleString('en-US', {
       minimumFractionDigits: decimals,
       maximumFractionDigits: decimals
     })
